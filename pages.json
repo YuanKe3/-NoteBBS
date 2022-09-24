@@ -1,0 +1,77 @@
+{
+  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "enablePullDownRefresh": true,
+        "backgroundColor":"#555", // 下拉和上拉回弹背景色
+        "backgroundTextStyle": "light", // 下拉图标：light/dark（默认）
+        // #ifdef H5
+        "navigationStyle": "custom" // 自定义导航
+        // #endif
+      }
+    },
+    {
+      "path": "pages/my/my",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/community/community",
+      "style": {
+        "navigationBarTitleText": "社区"
+      }
+    },
+    {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
+      "path": "pages/my/edit",
+      "style": {
+        "navigationBarTitleText": "编辑"
+      }
+    }
+  ],
+  // 全局配置，下面配置对整个应用的每个页面的默认配置。
+  "globalStyle": {
+    "navigationBarBackgroundColor": "#555", // 导航栏颜色
+    "navigationBarTitleText": "首页", // 导航栏文字
+    "navigationBarTextStyle": "white", // 导航栏字体颜色
+    // "titleImage": "/static/logo.png", // 导航栏图片，注意一定是这种格式，不要有@/static/logo.png这样形式
+    "onReachBottomDistance": 50 // 页面上拉距离底部多少px，触发 onReachBottom 生命钩子
+  },
+  "tabBar": {
+    "color": "#b0abb3",
+    "selectedColor": "#345dc2",
+    "backgroundColor": "#f8f8f8",
+    "borderStyle": "white",
+    "fontSize": "8px",
+    "iconWidth": "20px",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/home.png",
+        "selectedIconPath": "static/home-selected.png"
+      },
+      {
+        "pagePath": "pages/community/community",
+        "text": "社区",
+        "iconPath": "static/community.png",
+        "selectedIconPath": "static/community-selected.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "static/my.png",
+        "selectedIconPath": "static/my-selected.png"
+      }
+    ]
+  }
+}
