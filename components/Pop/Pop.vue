@@ -4,17 +4,29 @@
     <slot></slot>
     <view class="dialog__btns">
       <button size="mini" @click="closePop">取消</button>
-      <button size="mini" type="primary" @click="modifyConfirm">修改</button>
+      <button v-if="!enableConfirmBtn" type="primary" size="mini" @click="previewImage">预览</button>
+      <button v-else type="primary" size="mini" @click="confirmSubmit">确认</button>
     </view>
   </view>
 </template>
 
 <script setup>
-  const emit = defineEmits(['close', 'confirm'])
+  defineProps({
+    enableConfirmBtn: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  })
+  
+  const emit = defineEmits(['close', 'preview', 'confirm'])
   const closePop = () => {
     emit('close')
   }
-  const modifyConfirm = () => {
+  const previewImage = () => {
+    emit('preview')
+  }
+  const confirmSubmit = () => {
     emit('confirm')
   }
 </script>

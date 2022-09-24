@@ -4,7 +4,7 @@ import store from "../../../store"
 const useTopSquareHook = () => {
   const toEditPage = () => {
     uni.navigateTo({
-      url: `/pages/my/edit?userInfo=${encodeURIComponent(JSON.stringify(store.state.userModule))}`
+      url: `/pages/my/edit`
     })
   }
   
