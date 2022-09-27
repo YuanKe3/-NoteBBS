@@ -46,7 +46,7 @@
 
   .dialog {
     width: 600upx;
-    height: 300upx;
+    height: 500upx;
     background-color: #fff;
     border-radius: 10upx;
     position: fixed;

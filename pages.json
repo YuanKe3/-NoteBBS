@@ -6,16 +6,24 @@
         "navigationBarTitleText": "首页",
         "enablePullDownRefresh": true,
         "backgroundColor":"#555", // 下拉和上拉回弹背景色
-        "backgroundTextStyle": "light", // 下拉图标：light/dark（默认）
+        "backgroundTextStyle": "light" // 下拉图标：light/dark（默认）
         // #ifdef H5
-        "navigationStyle": "custom" // 自定义导航
+        ,"app-plus": {
+          "titleNView": {
+            "searchInput": {
+              "borderRadius": "10px",
+              "placeholder": "请输入笔记名......",
+              "backgroundColor": "#fff"
+            }
+          }
+        }
         // #endif
       }
     },
     {
       "path": "pages/my/my",
       "style": {
-        "navigationBarTitleText": "我的",
+        // "navigationBarTitleText": "我的",
         "navigationStyle": "custom"
       }
     },
@@ -35,6 +43,12 @@
       "path": "pages/my/edit",
       "style": {
         "navigationBarTitleText": "编辑"
+      }
+    },
+    {
+      "path": "pages/index/note",
+      "style": {
+        "navigationStyle": "custom"
       }
     }
   ],

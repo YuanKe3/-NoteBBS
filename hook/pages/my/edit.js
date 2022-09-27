@@ -43,6 +43,7 @@ const useNickNamePopEffect = (
   }
   const closeNickNamePop = () => {
     isShowNickNamePop.value = false
+    editedNickName.value = store.state.userModule.nickName
   }
   const confirmChangeNickName = async () => {
     const res = await req({
@@ -72,7 +73,9 @@ const useDescPopEffect = (
     isShowDescPop.value = true
   }
   const closeDescPop = () => {
+    console.log('guanbi')
     isShowDescPop.value = false
+    editedDesc.value = store.state.userModule.description
   }
   const confirmChangeDesc = async () => {
     const res = await req({

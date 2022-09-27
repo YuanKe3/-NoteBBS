@@ -15,7 +15,9 @@
   }
 </script>
 
-<style>
+<style lang="scss">
+  @import "@/uni_modules/uview-plus/index.scss";
+  
   /*每个页面公共css */
   .default {
     list-style: none;
@@ -25,8 +27,6 @@
   body,
   html {
     overflow-x: hidden;
-/*    height: 100%;
-    width: 100%; */
   }
 
   /* 隐藏滚动条 */

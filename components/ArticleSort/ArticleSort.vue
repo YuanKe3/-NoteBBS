@@ -1,76 +1,188 @@
 <template>
-  <view class="sort">
-    <view class="title">
-      <uni-icons type="paperclip" size="23"></uni-icons>
-      <text class="title__content">笔记列表</text>
-      <text class="title__description">（共 2 个分类）</text>
-    </view>
-    <!-- accordion 开启手风琴 -->
-    <uni-collapse :accordion="true">
-      <uni-collapse-item title="HTML / CSS / JavaScript"
-        thumb="https://i0.wp.com/www.techomoro.com/wp-content/uploads/2019/11/javascript-736400-1.png?fit=1854%2C941&ssl=1">
-        <scroll-view scroll-y="true">
-          <ul class="sections default">
-            <li class="section">
-              dsf
-            </li>
-            <li class="section">2222222222222222222222222222222</li>
-            <li class="section">3333333333333333333333333333333</li>
-            <li class="section">4444444444444444444444444444444</li>
-            <li class="section">5555555555555555555555555555555</li>
-            <li class="section">6666666666666666666666666666666</li>
-            <li class="section">7777777777777777777777777777777</li>
-            <li class="section">8888888888888888888888888888888</li>
-            <li class="section">9999999999999999999999999999999</li>
-            <li class="section">1000000000000000000000000000000</li>
-          </ul>
-        </scroll-view>
-      </uni-collapse-item>
-      <uni-collapse-item title="标题文字2"
-        thumb="https://vkceyugu.cdn.bspapp.com/VKCEYUGU-dc-site/460d46d0-4fcc-11eb-8ff1-d5dcf8779628.png"
-        :show-animation="true">
-        <text class="content">折叠内容主体，可自定义内容及样式</text>
-      </uni-collapse-item>
-    </uni-collapse>
+
+  <!-- #ifdef MP-WEIXIN -->
+  <view class="search">
+    <u-search placeholder="请输入笔记名......" :actionStyle="{ color: 'white' }"></u-search>
   </view>
+  <!-- #endif -->
+
+  <scroll-view class="nav" scroll-x="true">
+    <view class="nav__wrapper">
+      <view v-for="(tabList, tabIndex) in tabData" :key="tabList.id"
+        :class="{ nav__item: true, selected: tabIndex === selectedIndex }" @click="selectNav(tabIndex, tabList.id)">
+        {{ tabList.tabTitle }}
+      </view>
+    </view>
+  </scroll-view>
+
+  <template v-if="mainContent.length !== 0">
+    <template v-for="noteList in mainContent" :key="noteList.id">
+      <view class="note">
+        <view class="note__title">
+          <u-icon name="tags" color="#2979ff" :label="noteList.categoryName" size="28"></u-icon>
+        </view>
+        <ul class="sections">
+          <li class="section" hover-class="click-hover" v-for="note in noteList.lists" :key="note.id" @click="toNoteDetail(note.id, note.noteName)">
+            <u--image class="section__image" :src="note.previewImage" :fade="true" width="50" height="50"
+              mode="widthFix">
+              <template v-slot:loading>
+                <u-loading-icon color="green"></u-loading-icon>
+              </template>
+            </u--image>
+            <text>{{ note.noteName }}</text>
+          </li>
+        </ul>
+      </view>
+    </template>
+  </template>
 </template>
 
 <script setup>
+  import {
+    getCurrentInstance,
+    onMounted,
+    reactive,
+    ref,
+    toRef
+  } from "vue"
+  import {
+    req
+  } from "../../server/api";
+
+  // 接收 tab 的信息
+  const prop = defineProps({
+    tabData: {
+      type: Array,
+      required: true
+    },
+    firstTabId: {
+      type: Number,
+      required: true
+    }
+  })
+  // 上面的 tabData、firstTabId 只能在 HTML 中使用,而下面解构了之后能在 js 中调用
+  const firstTabId = toRef(prop, 'firstTabId')
+
+  // 内容区域渲染
+  const mainContent = reactive([])
+  const getMainContent = async (tabId) => {
+    const result = await req({
+      url: `/majorCategory/${tabId}/minorCategory`
+    })
+    mainContent.length = 0
+    mainContent.push(...result.data)
+  }
+  defineExpose({
+    getMainContent
+  })
+
+  onMounted(async () => {
+    // 组件开始渲染时,渲染第一个内容区域
+    await getMainContent(firstTabId.value)
+  })
+
+  // 切换 tab 栏相关逻辑
+  let selectedIndex = ref(0)
+  const selectNav = async (index, tabId) => {
+    if (selectedIndex.value === index) return
+    selectedIndex.value = index
+    await getMainContent(tabId)
+  }
   
+  // 监听刷新操作,若刷新则返回主页
+  uni.$on('backToIndex', () => {
+    selectedIndex.value = 0
+  })
+  
+  // 进入笔记内部
+  const toNoteDetail = (noteId, noteName) => {
+    uni.navigateTo({
+      url: `/pages/index/note?noteId=${noteId}`
+    })
+  }
 </script>
 
 <style scoped lang="scss">
-  .sort {
-    width: 700upx;
-    height: 100%;
-    margin: 20upx auto;
-    /* #ifdef MP-WEIXIN */
-    margin: calc(var(--status-bar-height) + 20upx) auto 20upx;
-    /* #endif */
+  // 微信搜索框样式
+  /* #ifdef MP-WEIXIN */
+  .search {
+    padding: 20upx;
+    background-color: #555;
+  }
 
-    .title {
-      height: 60upx;
-      font-size: 40upx;
-      display: inline-flex;
-      justify-content: flex-start;
+  /* #endif */
+
+  // nav 栏样式
+  .nav {
+    background-color: #555;
+    color: #eee;
+    height: 120upx;
+    line-height: 120upx;
+
+    &__wrapper {
+      display: flex;
       align-items: center;
-      margin-bottom: 20upx;
+    }
 
-      &__content {
-        font-weight: 400;
-      }
+    &__item {
+      min-width: 160upx;
+      display: flex;
+      justify-content: center;
+      flex: 1;
+    }
+  }
 
-      &__description {
-        font-size: 25upx;
-        font-weight: 400;
-      }
+  // nav 栏选中样式
+  .selected {
+    color: skyblue;
+    position: relative;
+    transition: color 0.3s ease;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100upx;
+      height: 2upx;
+      top: 30upx;
+      background-color: skyblue;
+      transition: all 0.3s ease;
+    }
+  }
+
+  // 内容区样式
+  .note {
+    margin: 20upx;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0upx 0upx 6upx rgba(0, 0, 0, 0.2);
+    margin-bottom: 50upx;
+
+    &__title {
+      margin: 20upx 0 20upx 20upx;
+      font-size: 35upx;
     }
 
     .sections {
+      padding: 0;
+
       .section {
-        box-shadow: 0 1upx 3upx 0 rgba(0, 0, 0, 0.1), 0 6upx 10upx 0 rgba(0, 0, 0, 0.1);
-        margin-top: 30upx;
+        height: 100upx;
+        border-top: 1upx solid #eee;
         padding: 20upx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        text {
+          font-size: 35upx;
+          max-width: 350upx;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+      }
+      .click-hover {
+        background-color: #f5f5f5;
       }
     }
   }

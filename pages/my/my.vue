@@ -54,7 +54,7 @@
 
 <style lang="scss" scoped>
   .my {
-    background-image: linear-gradient(#777, #eee);
+    background-image: linear-gradient(#555, #eee);
     height: 100vh;
     display: flex;
     flex-direction: column;

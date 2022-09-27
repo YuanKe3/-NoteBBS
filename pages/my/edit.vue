@@ -7,28 +7,34 @@
       </view>
 
       <view class="edit__item" @click="showNickNamePop">
-        <view><text>昵称：</text>{{ nickName }}</view>
+        <view>
+          <text class="edit__tag">昵称：</text>
+          <text class="edit__content">{{ nickName }}</text>
+        </view>
         <uni-icons type="right"></uni-icons>
       </view>
 
       <view class="edit__item" @click="showDescriptionPop">
-        <view><text>描述：</text>{{ description }}</view>
+        <view>
+          <text class="edit__tag">描述：</text>
+          <text class="edit__content">{{ description }}</text>
+        </view>
         <uni-icons @click="logout" type="right"></uni-icons>
       </view>
     </List>
-    
+
     <button class="logout" @click="logout" type="warn">退出登录</button>
 
     <Pop v-if="isShowAvatarPop" @close="closeAvatarPop" @preview="previewImage">
-      <image class="pop__image" @click="openGallery" :src="previewTempImage" mode="widthFix"></image>
+      <image class="pop__image" @click="openGallery" :src="previewTempImage" mode="aspectFit"></image>
     </Pop>
 
     <Pop v-if="isShowNickNamePop" @close="closeNickNamePop" @confirm="confirmChangeNickName" :enableConfirmBtn="true">
-      <input v-model="editedNickName" class="pop__nickName" type="text" maxlength="10" />
+      <textarea v-model="editedNickName" class="pop__nickName" type="text" maxlength="10"></textarea>
     </Pop>
 
     <Pop v-if="isShowDescPop" @close="closeDescPop" @confirm="confirmChangeDesc" :enableConfirmBtn="true">
-      <textarea v-model="editedDesc" class="pop__desc" cols="30" rows="10"></textarea>
+      <textarea v-model="editedDesc" class="pop__desc" cols="30" rows="10" maxlength="80"></textarea>
     </Pop>
   </view>
 
@@ -131,7 +137,7 @@
       }
     })
   }
-  
+
   // 退出登录
   const logout = () => {
     uni.removeStorageSync('token')
@@ -146,7 +152,7 @@
   .logout {
     margin: 50upx 20upx;
   }
-  
+
   .edit {
     height: 100vh;
     background-color: #eee;
@@ -158,16 +164,15 @@
       align-items: center;
       height: 130upx;
       position: relative;
-      font-size: 28upx;
       color: #555;
       white-space: nowrap;
       overflow: hidden;
-
-      text {
-        font-size: 35upx;
-        color: #222;
+ 
+      view {
+        display: flex;
+        align-items: center;
       }
-
+ 
       image {
         width: 120upx;
       }
@@ -179,30 +184,47 @@
         width: 100%;
         background-color: #eee;
         bottom: 0upx;
-        // top: 0;
       }
+    }
+    
+    &__tag {
+      font-size: 35upx;
+      font-weight: bold;
+    }
+    
+    &__content {
+      display: inline-block;
+      // background-color: red;
+      font-size: 30upx;
+      max-width: 535upx;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .pop {
       &__image {
-        width: 150upx;
+        max-width: 450upx;
+        max-height: 330upx;
         margin-top: 50upx;
       }
 
       &__nickName {
         border: 1upx solid #ccc;
         margin-top: 50upx;
+        border-radius: 10upx;
         width: 500upx;
-        height: 80upx;
+        height: 280upx;
         padding: 15upx;
-        font-size: 40upx;
+        font-size: 30upx;
       }
 
       &__desc {
         border: 1upx solid #ccc;
         margin-top: 50upx;
+        border-radius: 10upx;
         width: 500upx;
-        height: 80upx;
+        height: 280upx;
         padding: 15upx;
         font-size: 30upx;
       }
