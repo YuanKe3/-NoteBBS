@@ -24,11 +24,6 @@
     padding: 0 30upx;
   }
 
-  body,
-  html {
-    overflow-x: hidden;
-  }
-
   /* 隐藏滚动条 */
   body::-webkit-scrollbar {
     display: none;
